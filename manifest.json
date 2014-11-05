@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "TrelloAssistant",
+  "version": "0.0.1",
+  "author": "kenticny",
+  "permissions": [
+    "https://trello.com/*"
+  ],
+  "icons": {
+    "128": "/assets/images/icons/icon.png"
+  },
+  "browser_action": {
+    "default_icon": "/assets/images/icons/icon.png",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "page": "background.html",
+    "persistent": true
+  }
+}
