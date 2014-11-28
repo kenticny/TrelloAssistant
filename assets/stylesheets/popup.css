@@ -39,6 +39,7 @@ article {
   margin: 2px 0;
   text-align: center;
   background: #eee;
+  background-size:100% auto !important;
   font-family: "Arial";
   font-weight: bold;
   color: #fff;
