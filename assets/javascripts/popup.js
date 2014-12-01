@@ -1,12 +1,28 @@
 var BG = chrome.extension.getBackgroundPage();
 
 $(function(){
-  $("#test").click(function() {
-    BG.test()
+  $('#test').click(function() {
+    // BG.test()
+    alert($(BG.document).find('template#demo').html());
   })
 
   BG.getBoards(function(boards) {
-    $("article").html(getBoardTemplate(JSON.parse(boards)));
+    $('article').html(getBoardTemplate(JSON.parse(boards)));
+
+    $('.board').click(function() {
+      var boardId = $(this).attr('data-id');
+      BG.getListsByBoardId(boardId, function(lists) {
+        $('#nav').html(getListsTemplate(JSON.parse(lists)));
+      });
+      BG.getCardsByBoardId(boardId, function(cards) {
+        $('article').html(getCardsTemplate(JSON.parse(cards)));
+        $('.card').click(function() {
+          BG.getCardContentById($(this).attr('data-id'), {actions: 'commentCard'}, function(content) {
+            console.log(content)
+          });
+        });
+      });
+    });
   });
 
   BG.getCurrentUser(function(user) {
@@ -15,14 +31,9 @@ $(function(){
   });
 
   BG.getNotification(function(notifications) {
-    console.log(JSON.parse(notifications));
+    // console.log(JSON.parse(notifications));
   });
 
-  $(".board").click(function() {
-    BG.getLists($(this).attr("data-id"), function(lists) {
-      $("article").html(getListsTemplate(JSON.parse(lists)));
-    });
-  });
 
 });
 
@@ -47,7 +58,11 @@ function getListsTemplate(lists) {
 function getCardsTemplate(cards) {
   var cardsTemplate = '';
   for(var i in cards) {
-    cardsTemplate += '<div class="card">' + cards[i].name + '</div>'
+    cardsTemplate += '<div class="card" data-id="' + cards[i].id + '">' + cards[i].name + '</div>'
   }
   return cardsTemplate;
+}
+
+function getCardContentTemplate(content) {
+  var cardContentTemplate = '';
 }

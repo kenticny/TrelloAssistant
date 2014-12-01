@@ -10,7 +10,14 @@ var config = {
       notifications: "/members/me/notifications"
     },
     board: {
-      lists: "/boards/{id}/lists"
+      lists: "/boards/{id}/lists",
+      cards: "/boards/{id}/cards"
+    },
+    list: {
+      cards: "/lists/{id}/cards"
+    },
+    card: {
+      content: "/cards/{id}"
     }
   }
 }
