@@ -1,3 +1,7 @@
+var oa = oauth(
+  "1f7fc3749300a14a879de2eef7fba060", 
+  "0509b5365debaf38e176068db56e8dca3cc87ce9f29a5e0e4ba107b4ba71df43");
+
 /**
  * 发送HTTP请求 (send basic request)
  * @param  {[string]}   url      [url]
@@ -7,8 +11,8 @@
  */
 function sendRequest(url, params, method, callback) {
   oa.sendSignedRequest(url, callback, {
-      method: method, 
-      parameters: params || {} 
+    method: method, 
+    parameters: params || {} 
   });
 }
 
@@ -57,6 +61,15 @@ function oauth(key, secret, callback) {
 }
 
 /**
+ * oauth 认证
+ * @param  {Function} callback
+ */
+function authorize(callback) {
+  callback = callback || function() {};
+  oa.authorize(callback);
+}
+
+/**
  * 生成带参数的URL (replace url with params)
  * @param  {[string]} url    [url template]
  * @param  {[object]} params [params object, param name -> param value]
@@ -70,6 +83,17 @@ function getUrl(url, params) {
     }
   }
   return host + version + url;
+}
+
+/**
+ * 检查Oauth有效性
+ * @return {boolean} [是否有效]
+ */
+function isValid() {
+  if(!oa.getToken() || !oa.getTokenSecret()) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -184,17 +208,3 @@ function clearWarningBadge() {
 // }
 
 //checkNotifications();
-
-var oa = oauth(
-  "1f7fc3749300a14a879de2eef7fba060", 
-  "0509b5365debaf38e176068db56e8dca3cc87ce9f29a5e0e4ba107b4ba71df43");
-
-function test() {
-  oa.authorize(function(token,b,c) {
-    console.log(token,b,c);
-    
-    oa.sendSignedRequest("https://api.trello.com/1/members/me", function(res, xhr) {
-      console.log(res);
-    }, {method: "GET"})
-  });
-}

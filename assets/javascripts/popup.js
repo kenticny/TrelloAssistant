@@ -1,10 +1,21 @@
 var BG = chrome.extension.getBackgroundPage();
 
 $(function(){
-  $('#test').click(function() {
-    // BG.test()
-    alert($(BG.document).find('template#demo').html());
+
+  if(BG.isValid()) {
+    checkUserInfo()
+  }else {
+    $('article').html("<a href='javascript:;' class='oauth'>PLEASE LOGIN</a>")
+  }
+
+  $(".oauth").click(function() {
+    doAuth();
   })
+
+  // $('#test').click(function() {
+  //   // BG.test()
+  //   alert($(BG.document).find('template#demo').html());
+  // })
 
   BG.getBoards(function(boards) {
     $('article').html(getBoardTemplate(JSON.parse(boards)));
@@ -25,17 +36,28 @@ $(function(){
     });
   });
 
-  BG.getCurrentUser(function(user) {
-    // console.log(JSON.parse(user));
-    // $("header #user").html()
-  });
+  // BG.getCurrentUser(function(user) {
+  //   // console.log(JSON.parse(user));
+  //   // $("header #user").html()
+  // });
 
-  BG.getNotification(function(notifications) {
-    // console.log(JSON.parse(notifications));
-  });
-
+  // BG.getNotification(function(notifications) {
+  //   // console.log(JSON.parse(notifications));
+  // });
 
 });
+
+function doAuth() {
+  BG.authorize(function() {
+    alert("ok")
+  });
+}
+
+function checkUserInfo() {
+  BG.getCurrentUser(function(a,b,c) {
+    console.log(a,b,c)
+  })
+}
 
 function getBoardTemplate(boards) {
   var boardTemplate = '';
