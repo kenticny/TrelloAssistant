@@ -10,5 +10,20 @@
     <script src="/assets/javascripts/background.js"></script>
   </head>
   <body>
+    <template id="boards">
+      <div class="board" style="background:${{background}};" data-id="${{id}}">
+        ${{name}}
+      </div>
+    </template>
+    <template id="lists">
+      <div class="list" data-id="${{id}}">
+        ${{name}}
+      </div>
+    </template>
+    <template id="cards">
+      <div class="card" data-id="${{id}}">
+        ${{name}}
+      </div>
+    </template>
   </body>
 </html>
