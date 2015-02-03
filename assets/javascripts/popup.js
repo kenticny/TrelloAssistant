@@ -1,8 +1,13 @@
 var BG = chrome.extension.getBackgroundPage();
 var mainArea = new Template(BG.document, "simple-template");
-var headArea = new Template(BG.document, "nav");
+var navArea = new Template(BG.document, "nav .list-panel");
 
 $(function(){
+
+  // $("body").click(function() {
+  //   var flag = $("#nav .list-panel").hasClass("shown-flag");
+  //   if(flag) navHide();
+  // });
 
   if(!BG.isValid()) {
     $('article').html("<a href='javascript:;' class='oauth'>PLEASE LOGIN</a>");
@@ -13,6 +18,12 @@ $(function(){
   });
 
   getBoards();
+
+  $("header #nav .label-panel").click(function() {
+    var flag = $("#nav .list-panel").hasClass("shown-flag");
+    flag ? navHide() : navShow();
+  });
+
   //   $('article').html(getBoardTemplate(JSON.parse(boards)));
 
   //   $('.board').click(function() {
@@ -56,19 +67,56 @@ function getBoards() {
     $(".board").click(function() {
       var boardId = $(this).attr('data-id');
       getListsByBoardId(boardId);
+      setShownList();
       getCardsByBoardId(boardId);
     });
   });
 }
 
-function getListsByBoardId(id) {
+function getListsByBoardId(id, callback) {
   BG.getListsByBoardId(id, function(lists) {
-    headArea.get("lists").iterator(JSON.parse(lists));
+    navArea.get("lists").iterator(JSON.parse(lists));
+    $("div.list").click(function() {
+      var listId = $(this).attr("data-id");
+      var label = $(this).text();
+      getCardsByListId(listId);
+      setShownList(label);
+      navHide();
+    });
   });
+}
+
+function setShownList(listname) {
+  listname = listname || "全部";
+  $("header #nav .label-panel").html(listname);
 }
 
 function getCardsByBoardId(id) {
   BG.getCardsByBoardId(id, function(cards) {
-    mainArea.get("cards").iterator(JSON.parse(cards));
+    iteratorCards(cards);
   });
+}
+
+function getCardsByListId(id) {
+  BG.getCardsByListId(id, function(cards) {
+    iteratorCards(cards);
+  });
+}
+
+function iteratorCards(cards) {
+  mainArea.get("cards").iterator(JSON.parse(cards));
+}
+
+function navShow() {
+  if(!$("#nav .list-panel").hasClass("shown-flag")) {
+    $("#nav .list-panel").show();
+    $("#nav .list-panel").addClass("shown-flag");
+  }
+}
+
+function navHide() {
+  if($("#nav .list-panel").hasClass("shown-flag")) {
+    $("#nav .list-panel").hide();
+    $("#nav .list-panel").removeClass("shown-flag");
+  }
 }
